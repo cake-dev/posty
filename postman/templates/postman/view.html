@@ -1,0 +1,111 @@
+{% extends "postman/base.html" %}
+{% load i18n %}
+{% load postman_tags %}
+{% load crispy_forms_tags %}
+{% block content %}
+  <style>
+    .message_card {
+
+    }
+    .message_date {
+      font-size: 10px;
+      color: #999;
+      height: 25px;
+      margin-top: 10px;
+    }
+  </style>
+  <div id="postman">
+    <h1>
+      {% if pm_messages|length > 1 %}
+        {% trans "Conversation" %}
+      {% else %}
+        {% trans "Message" %}
+      {% endif %}
+    </h1>
+    <form action="" method="post">
+      {% csrf_token %}
+      <input type="hidden"
+             {% if pm_messages|length > 1 and message.thread_id %}name="tpks" value="{{ message.thread_id }}"{% else %}name="pks" value="{{ message.pk }}"{% endif %}/>
+      <a href="{{ next_url }}" class="btn btn-info">{% trans "Back" %}</a>
+      <span id="pm_buttons">
+        {% if not archived %}
+          <button type="submit"
+                  class="pm_btn pm_btn-archive btn btn-warning btn-sm"
+                  onclick="this.form.action='{% url 'postman:archive' %}?next={{ next_url|urlencode }}">
+            {% trans "Archive" %}
+          </button>
+        {% endif %}
+        <button type="submit"
+                class="pm_btn pm_btn-delete btn btn-danger btn-sm"
+                onclick="this.form.action='{% url 'postman:delete' %}?next={{ next_url|urlencode }}">
+          {% trans "Delete Conversation" %}
+        </button>
+      </span>
+      <!-- {% if reply_to_pk %}<a href="{% url 'postman:reply' reply_to_pk %}?next={{ next_url|urlencode }}" class="pm_action pm_action-reply">{% trans "Reply" %}</a>{% endif %} -->
+    </form>
+    <table class="table" id="message_table">
+      <tr>
+        <th id="message_sender">Them</th>
+        <th id="message_receiver">Me</th>
+      </tr>
+      {% for pm_message in pm_messages %}
+        <tr>
+          {% if pm_message.recipient == user %}
+            <td>
+              <div class="card message_card">
+                <div class="card-body message_body">{{ pm_message.body|linebreaksbr }}</div>
+                <footer class="blockquote-footer">
+                  {{ pm_message.obfuscated_sender|or_me:user }}&nbsp;&nbsp;{{ pm_message.sent_at|date:"DATETIME_FORMAT" }}
+                </footer>
+              </div>
+            </div>
+          </td>
+        {% endif %}
+        {% if pm_message.sender == user %}
+          <td></td>
+          <td>
+            <div class="card message_card">
+              <div class="card-body message_body">{{ pm_message.body|linebreaksbr }}</div>
+              <footer class="blockquote-footer">
+                {{ pm_message.obfuscated_sender|or_me:user }}&nbsp;&nbsp;{{ pm_message.sent_at|date:"DATETIME_FORMAT" }}
+              </footer>
+            </div>
+          </div>
+        </td>
+      {% endif %}
+    </tr>
+  {% endfor %}
+</table>
+{% if reply_to_pk %}
+  <hr />
+  <h3>{% trans "Reply" %}</h3>
+  <form action="{% url 'postman:reply' reply_to_pk %}?next={{ next_url|urlencode }}"
+        method="post">
+    {% csrf_token %}
+    <div id="pm_reply">{{ form|crispy }}</div>
+    <button type="submit"
+            class="pm_btn pm_btn-reply btn btn-info is-size-7"
+            style="margin-bottom:5%">
+      {% trans 'Reply' %}
+    </button>
+  </form>
+{% endif %}
+</div>
+{% endblock %}
+{% comment %} <div class="pm_message{% if message.is_pending %} pm_pending{% endif %}{% if message.is_rejected %} pm_rejected{% endif %}{% if message.sender == user and message.sender_archived or message.recipient == user and message.recipient_archived %} pm_archived{% endif %}{% if message.sender == user and message.sender_deleted_at or message.recipient == user and message.recipient_deleted_at %} pm_deleted{% endif %}{% if message.recipient == user and not message.read_at %} pm_unread{% endif %}">
+  <div class="pm_header">
+    <span class="pm_sender">{{ message.obfuscated_sender|or_me:user }}</span> &raquo;
+    <span class="pm_recipient">{{ message.obfuscated_recipient|or_me:user }}</span> |
+    <span class="pm_date">{{ message.sent_at|date:"DATETIME_FORMAT" }}</span> |
+    <span class="pm_subject">{{ message.subject }}</span>
+    {% if message.is_rejected %}
+      <div class="pm_status">
+        {% trans "Rejected" %}
+        {% if message.moderation_reason %}
+          {% trans ":" %} {{ message.moderation_reason }}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+  <div class="pm_body">{{ message.body|linebreaksbr }}</div>
+</div> {% endcomment %}

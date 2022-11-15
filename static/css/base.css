@@ -1,0 +1,63 @@
+a {
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul {
+    list-style-position: inside;
+    padding-left: 0;
+}
+
+#filter {
+    margin: 0 0 10px 0;
+    float: right;
+    
+}
+
+#karmaFilterLowhigh {
+    display: none;
+}
+#karmaFilterHighLow {
+    display: none;
+}
+#commentsFilterLowhigh {
+    display: none;
+}
+#commentsFilterHighLow {
+    display: none;
+}
+
+/* The Modal (background) */
+.filterModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 50;
+    top: 50;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: grey;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}

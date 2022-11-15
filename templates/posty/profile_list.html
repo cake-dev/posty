@@ -1,0 +1,62 @@
+<!-- templates/posty/profile_list.html -->
+{% extends "base.html" %}
+{% block content %}
+    <div class="column">
+        <h1>Search for a PostyProfile</h1>
+        <input type="text"
+               id="tags"
+               class="input is-info"
+               placeholder="start typing a username..."/>
+        {% for profile in profiles %}
+            <div class="block">
+                <div class="card">
+                    <a href="{% url 'posty:profile' profile.id %}"
+                       style="text-decoration: none">
+                        <div class="card-content">
+                            <div class="media">
+                                <div class="media-left">
+                                    <figure class="image is-48x48">
+                                        <img src={{ profile.user.profile_picture.url }} alt="Placeholder image">
+                                    </figure>
+                                </div>
+                                <div class="media-content">
+                                    <p class="title is-4">{{ profile.user.username }}</p>
+                                    <p class="subtitle is-6">@{{ profile.user.username|lower }}</p>
+                                    <p class="subtitle is-6">Karma: {{ profile.user.user_karma }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+    $(function () {
+        var availableTags = [
+            {% for profile in profiles %}                "{{ profile.user.username }}",{% endfor %}
+        ];
+    $("#tags").autocomplete({
+        source: availableTags,
+        select: function (event, ui) {
+            var tag = ui.item.value;
+            var id = match_tag_to_id(tag);
+            window.location.href = "/profile/" + id;
+        }
+    });
+    } );
+
+    function match_tag_to_id(tag) {
+        var tags = [
+            {% for profile in profiles %}    "{{ profile.user.username }}",{% endfor %}
+        ];
+    var ids = [
+        {% for profile in profiles %}    "{{ profile.id }}",{% endfor %}
+        ];
+    var index = tags.indexOf(tag);
+    return ids[index];
+    }
+
+
+    </script>
+{% endblock content %}

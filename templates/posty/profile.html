@@ -1,0 +1,79 @@
+<!-- templates/posty/profile.html -->
+<!-- TODO display profile posts in descending order -->
+{% extends 'base.html' %}
+{% block content %}
+    <div class="column">
+        <div class="block">
+            <h1 class="title is-1">{{ profile.user.username }}'s Posts</h1>
+            Karma: {{ profile.user.user_karma }}
+        </div>
+        <div class="content">
+            {% for post in profile.user.posts.all %}
+                <a class="post" href="{% url 'posty:post_detail' post.pk %}">
+                    <div class="box">
+                        {{ post.body }}
+                        <span class="is-small has-text-grey-light">({{ post.created_at }})</span>
+                        <p>K: {{ post.post_karma }}</p>
+                        <p>Comments: {{ post.comment_count }}</p>
+                    </div>
+                </a>
+                <br>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="column is-one-third">
+        <div class="columns">
+            <div class="column is-one-third">
+                <figure class="image is-96x96">
+                    <img src={{ profile.user.profile_picture.url }} alt="Placeholder image">
+                </figure>
+            </div>
+            <div class="column">
+                <h1 class="title is-1">{{ profile.user.username }}</h1>
+            </div>
+        </div>
+        <div class="block">
+            <a href="{% url 'posty:profile_list' %}" style="text-decoration: none;">
+                <button class="button is-dark is-outlined is-fullwidth">All Profiles</button>
+            </a>
+            <form method="post">
+                {% csrf_token %}
+                <div class="buttons has-addons mt-1">
+                    {% if profile in user.profile.follows.all %}
+                        <button class="button is-success is-static">Follow</button>
+                        <button class="button is-danger" name="follow" value="unfollow">Unfollow</button>
+                    {% else %}
+                        <button class="button is-success has-background-info-dark"
+                                name="follow"
+                                value="follow">Follow</button>
+                        <button class="button is-danger is-static">Unfollow</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+        <div class="block">
+            <h3 class="title is-4">{{ profile.user.username }} follows:</h3>
+            <div class="content">
+                <ul>
+                    {% for following in profile.follows.all %}
+                        <li>
+                            <a href="{% url 'posty:profile' following.id %}">{{ following }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="block">
+            <h3 class="title is-4">{{ profile.user.username }} is followed by:</h3>
+            <div class="content">
+                <ul>
+                    {% for follower in profile.followed_by.all %}
+                        <li>
+                            <a href="{% url 'posty:profile' follower.id %}">{{ follower }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

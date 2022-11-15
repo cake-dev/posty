@@ -1,0 +1,5 @@
+.venv/*
+accounts/__pycache__/*
+accounts/migrations/__pycache__/*
+postman/__pycache__/*
+*.pyc
