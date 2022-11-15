@@ -8,14 +8,20 @@ from accounts.models import User
 
 @login_required
 def dashboard(request):
-    form = PostForm(request.POST or None)
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.user = request.user
-            post.save()
-            return redirect("posty:dashboard")
+    # form = PostForm(request.POST or None)
+    # if request.method == "POST":
+    form = PostForm(request.POST, request.FILES)
+    if form.is_valid():
+        img = form.cleaned_data["image"]
+        body = form.cleaned_data["body"]
+        post = Post.objects.create(user=request.user, image=img, body=body)
+        post.save()
+        return redirect("posty:dashboard")
+        # if form.is_valid():
+        #     post = form.save(commit=False)
+        #     post.user = request.user
+        #     post.save()
+        #     return redirect("posty:dashboard")
 
     followed_posts = Post.objects.filter(
         user__profile__in=request.user.profile.follows.all()
