@@ -22,6 +22,17 @@ class PostForm(forms.ModelForm):
         ),
         label="",
     )
+    image = forms.ImageField(
+        required=False,
+        widget=forms.widgets.FileInput(
+            attrs={
+                "class": "is-info",
+                "id": "post-image",
+                "accept": "image/*",
+            }
+        ),
+        label="",
+    )
 
     class Meta:
         model = Post
