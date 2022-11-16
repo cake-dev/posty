@@ -8,6 +8,7 @@
         </u>
         <br>
         <p>{{ post.body }}</p>
+        <img src="{{ post.image.url }}" width="300px" height="300px">
         {% comment %} <a class="deletebutton" id="delete{{post.id}}" href="" data-userid="{{ user.id }}" data-catid="{{ post.id }}">Delete</a> {% endcomment %}
         <hr>
         {% comment %} Karma {% endcomment %}

@@ -11,14 +11,16 @@ def dashboard(request):
     # form = PostForm(request.POST or None)
     # if request.method == "POST":
     form = PostForm(request.POST, request.FILES)
-    sorting = request.GET.get("sort")
     if form.is_valid():
         img = form.cleaned_data["image"]
         body = form.cleaned_data["body"]
+        if img is None:
+            img = "images/onebyone.png"
         post = Post.objects.create(user=request.user, image=img, body=body)
         post.save()
         return redirect("posty:dashboard")
 
+    sorting = request.GET.get("sort")
     ordering = {
         "date_sort": "-created_at",
         "karma_sort": "-post_karma",

@@ -20,7 +20,9 @@ class Profile(models.Model):
 class Post(models.Model):
     user = models.ForeignKey(User, related_name="posts", on_delete=models.DO_NOTHING)
     body = models.CharField(max_length=140)
-    image = models.ImageField(upload_to="images/", blank=True, null=True)
+    image = models.ImageField(
+        default="onebyone.png", upload_to="images/", blank=True, null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     post_karma = models.IntegerField(default=0, blank=True, null=True)
     comment_count = models.IntegerField(default=0, blank=True, null=True)
