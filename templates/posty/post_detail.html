@@ -182,7 +182,14 @@
                     $('#post' + catid).remove();
                     $('#post' + userid).remove();
                     $('#message').text(data);
-                    $(location).prop('href', '/')
+                    if(data == "True") {
+                        $(location).prop('href', '/')
+                    }
+                    else {
+                        alert("You can only delete your own posts!")
+                        location.reload();
+                    }
+                    
                 }
             })
     });

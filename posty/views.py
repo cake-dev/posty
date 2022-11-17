@@ -4,6 +4,9 @@ from .forms import PostForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from accounts.models import User
+from django.urls import reverse_lazy
+from django.urls import reverse
+
 
 
 @login_required
@@ -188,10 +191,10 @@ def deletePost(request):
         # user = User.objects.get(pk=user_id)
 
         if post.user.id == user_id:
-            print("Success!")
+            print(True)
             post.delete()
-            return redirect("posty:dashboard")
+            return HttpResponse("True")
         else:
-            return HttpResponse("You can't delete this post!")
+            return HttpResponse("False")
     else:
         return HttpResponse("Request method is not a GET")
