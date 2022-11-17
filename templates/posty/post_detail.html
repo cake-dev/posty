@@ -7,7 +7,9 @@
             <h2>{{ post.user.username }}'s Post</h2>
         </u>
         <br>
-        <p id="post-body">{{post.body}}</p>
+        {% with body=post.body|wordwrap:60 %}
+        <p id="post-body">{{body}}</p>
+        {% endwith %}
         {% comment %} set width and height if image is default image {% endcomment %}
         {% if post.image.url == '/media/images/onebyone.png' %}
             <img src="{{ post.image.url }}"
@@ -191,11 +193,20 @@
             })
     });
 
-    $('.updatebutton').click(function () {
+    {% comment %} $('.updatebutton').click(function () {
+        var clicked = false;
+        alert(clicked);
         var body = $('#post-body');
-        body.val = "";
-        body.replaceWith('<textarea id="body" class="textarea is-info" rows="4"></textarea>');
-    });
+        if(clicked == false) {
+            body.replaceWith('<textarea id="body" class="textarea is-info" rows="4">' + body.text() + '</textarea>');
+            clicked = true;
+        }
+        else {
+            body.replaceWith('<p id="post-body">' + body.text() + '</p>');
+            clicked = false;
+        }
+
+    }); {% endcomment %}
 
     $('.updatebuttonconfirm').click(function () {
         var catid;
