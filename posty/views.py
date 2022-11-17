@@ -180,18 +180,18 @@ def comment(request):
         return HttpResponse("Request method is not a GET")
 
 
-# def deletePost(request):
-# if request.method == "GET":
-#     post_id = request.GET["post_id"]
-#     user_id = int(request.GET["user_id"])
-#     post = Post.objects.get(pk=post_id)
-#     # user = User.objects.get(pk=user_id)
+def deletePost(request):
+    if request.method == "GET":
+        post_id = request.GET["post_id"]
+        user_id = int(request.GET["user_id"])
+        post = Post.objects.get(pk=post_id)
+        # user = User.objects.get(pk=user_id)
 
-#     if post.user.id == user_id:
-#         print("Success!")
-#         post.delete()
-#         return redirect("posty:dashboard")
-#     else:
-#         return HttpResponse("You can't delete this post!")
-# else:
-#     return HttpResponse("Request method is not a GET")
+        if post.user.id == user_id:
+            print("Success!")
+            post.delete()
+            return redirect("posty:dashboard")
+        else:
+            return HttpResponse("You can't delete this post!")
+    else:
+        return HttpResponse("Request method is not a GET")
