@@ -19,9 +19,10 @@ class PostForm(forms.ModelForm):
                 "maxlength": "255",
                 "minlength": "1",
                 "rows": "3",
-            }
+            },
         ),
         label="",
+        error_messages={"required": ""},
     )
     image = forms.ImageField(
         required=False,

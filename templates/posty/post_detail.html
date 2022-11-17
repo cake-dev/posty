@@ -7,7 +7,7 @@
             <h2>{{ post.user.username|upper }}'s Post</h2>
         </u>
         <br>
-        {{ post.body|wordwrap:30|linebreaks }}
+        {{ post.body|wordwrap:60|linebreaks }}
         {% comment %} set width and height if image is default image {% endcomment %}
         {% if post.image.url == '/media/images/onebyone.png' %}
             <img src="{{ post.image.url }}"
