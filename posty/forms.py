@@ -16,8 +16,9 @@ class PostForm(forms.ModelForm):
                 "placeholder": "Post something...",
                 "class": "textarea is-info is-medium",
                 "id": "post-body",
-                "maxlength": "250",
+                "maxlength": "255",
                 "minlength": "1",
+                "rows": "3",
             }
         ),
         label="",

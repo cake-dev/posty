@@ -19,7 +19,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(User, related_name="posts", on_delete=models.DO_NOTHING)
-    body = models.CharField(max_length=140)
+    body = models.CharField(max_length=255)
     image = models.ImageField(
         default="onebyone.png", upload_to="images/", blank=True, null=True
     )

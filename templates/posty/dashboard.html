@@ -2,7 +2,7 @@
 {% extends 'base.html' %}
 {% block content %}
     {% load static %}
-    <div class="column">
+    <div class="column is-three-fifths">
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
@@ -53,38 +53,24 @@
                 </div>
             </div>
         </div>
-        <ul id="posts">
-            {% comment %} {% for post in posts.all|dictsortreversed:"comment_count" %} {% endcomment %}
-            {% for post in posts.all %}
-                <li class="post_element">
-                    <a class="post" href="{% url 'posty:post_detail' post.pk %}">
-                        <div class="box">
-                            {{ post.body }}
-                            <span class="is-small has-text-grey-light">
-                                ({{ post.created_at }} by {{ post.user.username }})
-                                <br>
-                                <p class="post_karma">K: {{ post.post_karma }}</p>
-                                <p class="post_comments">Comments: {{ post.comment_count }}</p>
-                            </span>
-                        </div>
-                    </a>
-                    <br>
-                </li>
-            {% endfor %}
-        </ul>
+        {% comment %} {% for post in posts.all|dictsortreversed:"comment_count" %} {% endcomment %}
+        {% for post in posts.all %}
+            <a class="post" href="{% url 'posty:post_detail' post.pk %}">
+                <div class="box">
+                    {% comment %} add post body to fit width of box {% endcomment %}
+                    <p>{{ post.body|truncatechars:80 }}</p>
+                    <span class="is-small has-text-grey-light">
+                        ({{ post.created_at }} by {{ post.user.username }})
+                        <br>
+                        <p class="post_karma">K: {{ post.post_karma }}</p>
+                        <p class="post_comments">Comments: {{ post.comment_count }}</p>
+                    </span>
+                </div>
+            </a>
+            <br>
+        {% endfor %}
     </div>
-    <div class="column is-one-third">
-        <div class="block">
-            <a href="{% url 'posty:profile_list' %}" style="text-decoration: none;">
-                <button class="button is-dark is-outlined is-fullwidth">All Profiles</button>
-            </a>
-        </div>
-        <div class="block">
-            <a href="{% url 'posty:profile' request.user.profile.id %}"
-               style="text-decoration: none">
-                <button class="button is-info is-light is-outlined is-fullwidth">My Profile</button>
-            </a>
-        </div>
+    <div class="column is-one-fifth">
         <div class="block">
             <div class="block">
                 <h2 class="title is-2">
@@ -101,5 +87,5 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock content %}
