@@ -182,7 +182,7 @@
                     $('#post' + catid).remove();
                     $('#post' + userid).remove();
                     $('#message').text(data);
-                    location.reload();
+                    $(location).prop('href', '/')
                 }
             })
     });
