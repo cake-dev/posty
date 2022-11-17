@@ -183,6 +183,7 @@
                     $('#post' + userid).remove();
                     $('#message').text(data);
                     if(data == "True") {
+                        alert("Post deleted");
                         $(location).prop('href', '/')
                     }
                     else {
