@@ -7,7 +7,7 @@
             <h2>{{ post.user.username }}'s Post</h2>
         </u>
         <br>
-        {{ post.body|wordwrap:60|linebreaks }}
+        <p id="post-body">{{post.body}}</p>
         {% comment %} set width and height if image is default image {% endcomment %}
         {% if post.image.url == '/media/images/onebyone.png' %}
             <img src="{{ post.image.url }}"
@@ -18,11 +18,7 @@
             <img src="{{ post.image.url }}" width="300px" height="300px">
         {% endif %}
         <hr>
-        <a class="updatebutton"
-        id="update{{ post.id }}"
-        href=""
-        data-userid="{{ user.id }}"
-        data-catid="{{ post.id }}">Update</a>
+        <a class="updatebutton" rel="no-refresh">Update</a>
         <a class="deletebutton"
         id="delete{{ post.id }}"
         href=""
@@ -196,6 +192,12 @@
     });
 
     $('.updatebutton').click(function () {
+        var body = $('#post-body');
+        body.val = "";
+        body.replaceWith('<textarea id="body" class="textarea is-info" rows="4"></textarea>');
+    });
+
+    $('.updatebuttonconfirm').click(function () {
         var catid;
         var userid;
         var body;
