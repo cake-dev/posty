@@ -15,25 +15,27 @@
               crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
-        <script src="https://d3js.org/d3.v7.min.js"></script>
-        <script src="{% static 'js/posty_functions.js' %}"></script>
-        <link rel="stylesheet" href="{% static 'css/base.css' %}">
-        <script src="{% static 'js/base.js' %}"></script>
+        {% comment %}
+        <script src="https://d3js.org/d3.v7.min.js"></script> {% endcomment %}
         <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
               rel="stylesheet"
               type="text/css"/>
+        <script src="{% static 'js/posty_functions.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <script src="{% static 'js/base.js' %}"></script>
         <title>Posty</title>
     </head>
     <body>
         <a href="{% url 'posty:dashboard' %}" style="text-decoration: none;">
             <section class="hero is-small is-success mb-4 has-background-info-dark">
                 <div class="hero-body">
-                    <h1 class="title is-1">Posty</h1>
-                    <p class="subtitle is-4">Social Media Put Simply</p>
+                    <h1 class="title is-1 posty-title"
+                        style="font-family:Klavika, sans-serif">Posty</h1>
+                    <p class="subtitle is-4">Social Media Made Simple</p>
                 </div>
             </section>
         </a>
-        <div class="container">
+        <div class="container-fluid">
             <header class="p-3 mb-3 border-bottom">
                 <div class="container">
                     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -57,16 +59,57 @@
                                     </li>
                                 </ul>
                             </div>
+                        {% else %}
+                        </ul>
+                        <!-- <div class="text-end">
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log In</a>
+                        <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+                    </div> -->
+                    {% endif %}
+                </div>
+            </div>
+        </header>
+        <div class="columns">
+            <div class="column is-one-fifth" id="left_column">
+                {% comment %} <div class="block">
+                    <a href="{% url 'posty:profile_list' %}" style="text-decoration: none;">
+                        <button class="button is-dark is-outlined is-fullwidth">All Profiles</button>
+                    </a>
+                </div>
+                <div class="block">
+                    <a href="{% url 'posty:profile' request.user.profile.id %}" style="text-decoration: none">
+                        <button class="button is-info is-light is-outlined is-fullwidth">My Profile</button>
+                    </a>
+                </div> {% endcomment %}
+                {% if user.is_authenticated %}
+                    <ul class="nav flex-column" id="navlist">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'posty:dashboard' %}">
+                                <button class="button is-info is-light is-fullwidth">Home</button>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active"
+                               href="{% url 'posty:profile' request.user.profile.id %}">
+                                <button class="button is-info is-light is-fullwidth">My Profile</button>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'posty:profile_list' %}">
+                                <button class="button is-info is-light is-fullwidth">All Profiles</button>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <div class="dropdown text-end">
                                 <a href="#"
-                                   class="d-block link-dark text-decoration-none dropdown-toggle button is-info ml-3"
+                                   class="d-block ml-4"
                                    id="dropdownUser1"
                                    data-bs-toggle="dropdown"
                                    aria-expanded="false">
-                                    Messaging
+                                    <button class="button is-info is-light is-fullwidth">Messaging</button>
                                 </a>
                                 <ul class="dropdown-menu text-medium" aria-labelledby="dropdownUser1">
-                                    <table class ="table">
+                                    <table class="table">
                                         <tr>
                                             <td>
                                                 <li>
@@ -94,21 +137,46 @@
                                     </table>
                                 </ul>
                             </div>
-                        {% else %}
-                        </ul>
-                        <!-- <div class="text-end">
-                        <a href="{% url 'login' %}" class="btn btn-outline-primary me-2">Log In</a>
-                        <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
-                    </div> -->
-                    {% endif %}
-                </div>
+                        </li>
+                        {% comment %} <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Disabled</a>
+                        </li> {% endcomment %}
+                    </ul>
+                {% endif %}
             </div>
-        </header>
-        <div class="columns">
             {% block content %}
             {% endblock content %}
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        // move navmenu with scroll keeping in same alignment using jquery
+        $(document).ready(function () {
+            var nav = $('#navlist');
+            var navHomeY = nav.offset().top;
+            var isFixed = false;
+            var $w = $(window);
+            $w.scroll(function () {
+                var scrollTop = $w.scrollTop();
+                var shouldBeFixed = scrollTop > navHomeY;
+                if (shouldBeFixed && !isFixed) {
+                    nav.css({
+                        position: 'fixed',
+                        top: 0,
+                        left: nav.offset().left,
+                        width: nav.width()
+                    });
+                    isFixed = true;
+                }
+                else if (!shouldBeFixed && isFixed) {
+                    nav.css({
+                        position: 'static'
+                    });
+                    isFixed = false;
+                }
+            });
+        });
+
+    </script>
 </body>
 </html>

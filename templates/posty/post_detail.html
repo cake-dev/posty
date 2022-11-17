@@ -1,14 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
     {% load static %}
-    <div class="post-entry">
+    <div class="post-entry column is-four-fifths">
         {% comment %} Detail View {% endcomment %}
         <u>
-            <h2>{{ post.user.username|upper }}'s Post</h2>
+            <h2>{{ post.user.username }}'s Post</h2>
         </u>
         <br>
-        <p>{{ post.body }}</p>
-        <img src="{{ post.image.url }}" width="300px" height="300px">
+        {{ post.body|wordwrap:60|linebreaks }}
+        {% comment %} set width and height if image is default image {% endcomment %}
+        {% if post.image.url == '/media/images/onebyone.png' %}
+            <img src="{{ post.image.url }}"
+                 width="0"
+                 height="0"
+                 style="visibility: hidden">
+        {% else %}
+            <img src="{{ post.image.url }}" width="300px" height="300px">
+        {% endif %}
         {% comment %} <a class="deletebutton" id="delete{{post.id}}" href="" data-userid="{{ user.id }}" data-catid="{{ post.id }}">Delete</a> {% endcomment %}
         <hr>
         {% comment %} Karma {% endcomment %}
@@ -31,141 +39,144 @@
         <br>
         <hr>
         {% comment %} Commenting {% endcomment %}
-        <h2>
+        <h4>
             <u> Comments ({{ post.comment_count }}) </u>
-        </h2>
+        </h4>
         {% for c in comment %}
             <p>
+                {% comment %} ="{% url 'posty:profile' comment.pk %}"> {% endcomment %}
                 <a href="/profile/{{ c.user.id }}">{{ c.user.username }}</a>: {{ c.body }}
             </p>
         {% endfor %}
-        <textarea id="comment{{post.id}}" rows="4" cols="50"></textarea>
+        <textarea id="comment{{post.id}}" class="textarea is-info" rows="4"></textarea>
         <br>
         <a class="commentbutton"
            id="commentbutton{{ post.id }}"
            href=""
            data-userid="{{ user.id }}"
-           data-catid="{{ post.id }}">Comment</a>
-        {% comment %} Ajax {% endcomment %}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-        <script type="text/javascript">
-        $('.upvotebutton').click(function () {
-            var catid;
-            var userid;
-            catid = $(this).attr("data-catid");
-            userid = $(this).attr("data-userid");
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "/post_detail/upvotepost",
-                    data: {
-                        post_id: catid,
-                        user_id: userid
-                    },
-                    success: function (data) {
-                        $('#post' + catid).remove();
-                        $('#post' + userid).remove();
-                        $('#message').text(data);
-                        alert(data);
-                        location.reload();
-                    }
-                })
-        });
-
-        $('.downvotebutton').click(function () {
-            var catid;
-            var userid;
-            catid = $(this).attr("data-catid");
-            userid = $(this).attr("data-userid");
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "/post_detail/downvotepost",
-                    data: {
-                        post_id: catid,
-                        user_id: userid
-                    },
-                    success: function (data) {
-                        $('#post' + catid).remove();
-                        $('#post' + userid).remove();
-                        $('#message').text(data);
-                        alert(data);
-                        location.reload();
-                    }
-                })
-        });
-
-        $('.clearbutton').click(function () {
-            var catid;
-            var userid;
-            catid = $(this).attr("data-catid");
-            userid = $(this).attr("data-userid");
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "/post_detail/clearpost",
-                    data: {
-                        post_id: catid,
-                        user_id: userid
-                    },
-                    success: function (data) {
-                        $('#post' + catid).remove();
-                        $('#post' + userid).remove();
-                        $('#message').text(data);
-                        location.reload();
-                    }
-                })
-        });
-
-        $('.commentbutton').click(function () {
-            var catid;
-            var userid;
-            var comment;
-            catid = $(this).attr("data-catid");
-            userid = $(this).attr("data-userid");
-            comment = $('#comment' + catid).val();
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "/post_detail/commentpost",
-                    data: {
-                        post_id: catid,
-                        user_id: userid,
-                        comment: comment
-                    },
-                    success: function (data) {
-                        $('#post' + catid).remove();
-                        $('#post' + userid).remove();
-                        $('#post' + comment).remove();
-                        $('#message').text(data);
-                        location.reload();
-                    }
-                })
-        });
-
-        $('.deletebutton').click(function () {
-            var catid;
-            var userid;
-            catid = $(this).attr("data-catid");
-            userid = $(this).attr("data-userid");
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "/post_detail/deletepost",
-                    data: {
-                        post_id: catid,
-                        user_id: userid
-                    },
-                    success: function (data) {
-                        $('#post' + catid).remove();
-                        $('#post' + userid).remove();
-                        $('#message').text(data);
-                        window.location.href = '/';
-                    }
-                })
-        });
-        </script>
+           data-catid="{{ post.id }}">
+            <button class="button is-success has-background-info">Comment</button>
+        </a>
     </div>
+    {% comment %} Ajax {% endcomment %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    $('.upvotebutton').click(function () {
+        var catid;
+        var userid;
+        catid = $(this).attr("data-catid");
+        userid = $(this).attr("data-userid");
+        $.ajax(
+            {
+                type: "GET",
+                url: "/post_detail/upvotepost",
+                data: {
+                    post_id: catid,
+                    user_id: userid
+                },
+                success: function (data) {
+                    $('#post' + catid).remove();
+                    $('#post' + userid).remove();
+                    $('#message').text(data);
+                    alert(data);
+                    location.reload();
+                }
+            })
+    });
+
+    $('.downvotebutton').click(function () {
+        var catid;
+        var userid;
+        catid = $(this).attr("data-catid");
+        userid = $(this).attr("data-userid");
+        $.ajax(
+            {
+                type: "GET",
+                url: "/post_detail/downvotepost",
+                data: {
+                    post_id: catid,
+                    user_id: userid
+                },
+                success: function (data) {
+                    $('#post' + catid).remove();
+                    $('#post' + userid).remove();
+                    $('#message').text(data);
+                    alert(data);
+                    location.reload();
+                }
+            })
+    });
+
+    $('.clearbutton').click(function () {
+        var catid;
+        var userid;
+        catid = $(this).attr("data-catid");
+        userid = $(this).attr("data-userid");
+        $.ajax(
+            {
+                type: "GET",
+                url: "/post_detail/clearpost",
+                data: {
+                    post_id: catid,
+                    user_id: userid
+                },
+                success: function (data) {
+                    $('#post' + catid).remove();
+                    $('#post' + userid).remove();
+                    $('#message').text(data);
+                    location.reload();
+                }
+            })
+    });
+
+    $('.commentbutton').click(function () {
+        var catid;
+        var userid;
+        var comment;
+        catid = $(this).attr("data-catid");
+        userid = $(this).attr("data-userid");
+        comment = $('#comment' + catid).val();
+        $.ajax(
+            {
+                type: "GET",
+                url: "/post_detail/commentpost",
+                data: {
+                    post_id: catid,
+                    user_id: userid,
+                    comment: comment
+                },
+                success: function (data) {
+                    $('#post' + catid).remove();
+                    $('#post' + userid).remove();
+                    $('#post' + comment).remove();
+                    $('#message').text(data);
+                    location.reload();
+                }
+            })
+    });
+
+    $('.deletebutton').click(function () {
+        var catid;
+        var userid;
+        catid = $(this).attr("data-catid");
+        userid = $(this).attr("data-userid");
+        $.ajax(
+            {
+                type: "GET",
+                url: "/post_detail/deletepost",
+                data: {
+                    post_id: catid,
+                    user_id: userid
+                },
+                success: function (data) {
+                    $('#post' + catid).remove();
+                    $('#post' + userid).remove();
+                    $('#message').text(data);
+                    window.location.href = '/';
+                }
+            })
+    });
+    </script>
     {% comment %} <a href="{% url 'post_edit' post.pk %}">+ Edit Blog Post</a>
     <p><a href="{% url 'post_delete' post.pk %}">+ Delete Blog Post</a></p> {% endcomment %}
 {% endblock content %}
