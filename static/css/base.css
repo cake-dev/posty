@@ -78,3 +78,7 @@ ul {
 .container.custom-container {
     padding: 0 50px;
 }
+
+.posty-title {
+    font-family: "Klavika", sans-serif;
+}

@@ -4,7 +4,7 @@
     <div class="post-entry column is-four-fifths">
         {% comment %} Detail View {% endcomment %}
         <u>
-            <h2>{{ post.user.username|upper }}'s Post</h2>
+            <h2>{{ post.user.username }}'s Post</h2>
         </u>
         <br>
         {{ post.body|wordwrap:60|linebreaks }}
@@ -39,22 +39,24 @@
         <br>
         <hr>
         {% comment %} Commenting {% endcomment %}
-        <h2>
+        <h4>
             <u> Comments ({{ post.comment_count }}) </u>
-        </h2>
+        </h4>
         {% for c in comment %}
             <p>
                 {% comment %} ="{% url 'posty:profile' comment.pk %}"> {% endcomment %}
                 <a href="/profile/{{ c.user.id }}">{{ c.user.username }}</a>: {{ c.body }}
             </p>
         {% endfor %}
-        <textarea id="comment{{post.id}}" rows="4" cols="50"></textarea>
+        <textarea id="comment{{post.id}}" class="textarea is-info" rows="4"></textarea>
         <br>
         <a class="commentbutton"
            id="commentbutton{{ post.id }}"
            href=""
            data-userid="{{ user.id }}"
-           data-catid="{{ post.id }}">Comment</a>
+           data-catid="{{ post.id }}">
+            <button class="button is-success has-background-info">Comment</button>
+        </a>
     </div>
     {% comment %} Ajax {% endcomment %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
