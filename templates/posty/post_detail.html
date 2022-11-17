@@ -3,9 +3,12 @@
     {% load static %}
     <div class="post-entry column is-four-fifths">
         {% comment %} Detail View {% endcomment %}
-        <u>
-            <h2>{{ post.user.username }}'s Post</h2>
-        </u>
+        <h2>
+            <a href="{% url 'posty:profile' post.user.pk %}"
+               style="text-decoration:none">{{ post.user.username }}</a>'s Post
+        </h2>
+        {% comment %} link to postman write view with post user name autofilled, send to existing conversation if one already exists {% endcomment %}
+        <a href="{% url 'postman:write' post.user.username %}">Send {{ post.user.username }} a message</a>
         <br>
         {{ post.body|wordwrap:60|linebreaks }}
         {% comment %} set width and height if image is default image {% endcomment %}
