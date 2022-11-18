@@ -2,6 +2,7 @@
 <!-- TODO display profile posts in descending order -->
 {% extends 'base.html' %}
 {% block content %}
+    {% load static %}
     <div class="column is-three-fifths">
         <div class="block">
             <h1 class="title is-1">{{ profile.user.username }}'s Posts</h1>
@@ -25,7 +26,7 @@
         <div class="columns">
             <div class="column is-one-third">
                 <figure class="image is-96x96">
-                    <img src={{ profile.user.profile_picture.url }} alt="Placeholder image">
+                    <img src={{ profile.user.profile_picture.url }} alt="Placeholder image" class="profile_pfp">
                 </figure>
             </div>
             <div class="column">
@@ -76,4 +77,5 @@
             </div>
         </div>
     </div>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock content %}

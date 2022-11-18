@@ -1,3 +1,4 @@
+import datetime
 from django.shortcuts import render, redirect
 from .models import Post, Profile, Upvoted, Downvoted, Comment
 from .forms import PostForm
@@ -35,10 +36,13 @@ def dashboard(request):
         user__profile__in=request.user.profile.follows.all()
     ).order_by(ordering[sorting])
 
+    # get current date_time
+    now = datetime.datetime.now()
+
     return render(
         request,
         "posty/dashboard.html",
-        {"form": form, "posts": followed_posts, "comment": Comment},
+        {"form": form, "posts": followed_posts, "comment": Comment, "now": now},
     )
 
 
