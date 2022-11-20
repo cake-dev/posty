@@ -198,3 +198,20 @@ def deletePost(request):
             return HttpResponse("False")
     else:
         return HttpResponse("Request method is not a GET")
+
+def updatePost(request):
+    if request.method == "GET":
+        post_id = request.GET["post_id"]
+        user_id = int(request.GET["user_id"])
+        post = Post.objects.get(pk=post_id)
+        # user = User.objects.get(pk=user_id)
+
+        if post.user.id == user_id:
+            print(True)
+            post.body = request.GET["body"]
+            post.save()
+            return HttpResponse("True")
+        else:
+            return HttpResponse("False")
+    else:
+        return HttpResponse("Request method is not a GET")
