@@ -70,7 +70,7 @@ def postDetailView(request, pk):
     return render(
         request,
         "posty/post_detail.html",
-        {"post": post, "comment": Comment.objects.filter(post=post)},
+        {"post": post, "comment": Comment.objects.filter(post=post), "currentuser": request.user},
     )
 
 

@@ -192,21 +192,13 @@
                 }
             })
     });
-
-    {% comment %} $('.updatebutton').click(function () {
-        var clicked = false;
-        alert(clicked);
+    {%if currentuser.id == post.user.id%}
+    $('.updatebutton').click(function () {
         var body = $('#post-body');
-        if(clicked == false) {
-            body.replaceWith('<textarea id="body" class="textarea is-info" rows="4">' + body.text() + '</textarea>');
-            clicked = true;
-        }
-        else {
-            body.replaceWith('<p id="post-body">' + body.text() + '</p>');
-            clicked = false;
-        }
+        body.replaceWith('<textarea id="body" class="textarea is-info" rows="4">' + body.text() + '</textarea>');
 
-    }); {% endcomment %}
+    });
+    {%endif%}
 
     $('.updatebuttonconfirm').click(function () {
         var catid;
