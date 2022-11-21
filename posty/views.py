@@ -191,7 +191,6 @@ def deletePost(request):
         # user = User.objects.get(pk=user_id)
 
         if post.user.id == user_id:
-            print(True)
             post.delete()
             return HttpResponse("True")
         else:
@@ -207,8 +206,9 @@ def updatePost(request):
         # user = User.objects.get(pk=user_id)
 
         if post.user.id == user_id:
-            print(True)
             post.body = request.GET["body"]
+            if(post.body == ""):
+                return HttpResponse("False")
             post.save()
             return HttpResponse("True")
         else:
@@ -225,11 +225,9 @@ def deleteComment(request):
         post = Post.objects.get(pk=post_id)
         # user = User.objects.get(pk=user_id)
         if comment.user.id == user_id:
-            print(True)
             post.comment_count -= 1
             post.save()
             comment.delete()
-
             return HttpResponse("True")
         else:
             return HttpResponse("False")
@@ -243,8 +241,9 @@ def updateComment(request):
         comment = Comment.objects.get(pk=comment_id)
         # user = User.objects.get(pk=user_id)
         if comment.user.id == user_id:
-            print(True)
             comment.body = request.GET["body"]
+            if(comment.body == ""):
+                return HttpResponse("False")
             comment.save()
             return HttpResponse("True")
         else:
