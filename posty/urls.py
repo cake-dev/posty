@@ -17,6 +17,7 @@ urlpatterns = [
     path('post_detail/deletepost', views.deletePost, name='delete'),
     path('post_detail/updatepost', views.updatePost, name='update'),
     path("post_detail/clearpost", views.clear, name="upvote"),
+    path("post_detail/deletecomment", views.deleteComment, name="deletecomment"),
     path("post_detail/downvotepost", views.downvote, name="downvote"),
     path("post_detail/commentpost", views.comment, name="comment"),
     path("post_detail/<int:pk>/", postDetailView, name="post_detail"),

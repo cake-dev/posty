@@ -215,3 +215,23 @@ def updatePost(request):
             return HttpResponse("False")
     else:
         return HttpResponse("Request method is not a GET")
+
+def deleteComment(request):
+    if request.method == "GET":
+        comment_id = request.GET["comment_id"]
+        user_id = int(request.GET["user_id"])
+        post_id = int(request.GET["post_id"])
+        comment = Comment.objects.get(pk=comment_id)
+        post = Post.objects.get(pk=post_id)
+        # user = User.objects.get(pk=user_id)
+        if comment.user.id == user_id:
+            print(True)
+            post.comment_count -= 1
+            post.save()
+            comment.delete()
+
+            return HttpResponse("True")
+        else:
+            return HttpResponse("False")
+    else:
+        return HttpResponse("Request method is not a GET")
