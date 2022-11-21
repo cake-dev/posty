@@ -235,3 +235,19 @@ def deleteComment(request):
             return HttpResponse("False")
     else:
         return HttpResponse("Request method is not a GET")
+
+def updateComment(request):
+    if request.method == "GET":
+        comment_id = request.GET["comment_id"]
+        user_id = int(request.GET["user_id"])
+        comment = Comment.objects.get(pk=comment_id)
+        # user = User.objects.get(pk=user_id)
+        if comment.user.id == user_id:
+            print(True)
+            comment.body = request.GET["body"]
+            comment.save()
+            return HttpResponse("True")
+        else:
+            return HttpResponse("False")
+    else:
+        return HttpResponse("Request method is not a GET")
