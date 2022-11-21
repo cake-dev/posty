@@ -2,6 +2,8 @@
 {% extends 'base.html' %}
 {% block content %}
     {% load static %}
+    {% comment %} link static stylesheet {% endcomment %}
+    {% comment %} link static javascript {% endcomment %}
     <div class="column is-three-fifths">
         <div class="container">
             <div class="row">
@@ -55,40 +57,65 @@
         </div>
         {% comment %} {% for post in posts.all|dictsortreversed:"comment_count" %} {% endcomment %}
         {% for post in posts.all %}
-            <a class="post" href="{% url 'posty:post_detail' post.pk %}">
-                <div class="box">
-                    {% comment %} add post body to fit width of box {% endcomment %}
-                    <p>{{ post.body|truncatechars:80 }}</p>
-                    <span class="is-small has-text-grey-light">
-                        ({{ post.created_at }} by {{ post.user.username }})
-                        <br>
-                        <p class="post_karma">K: {{ post.post_karma }}</p>
-                        <p class="post_comments">Comments: {{ post.comment_count }}</p>
-                    </span>
-                </div>
-            </a>
-            <br>
-        {% endfor %}
-    </div>
-    <div class="column is-one-fifth" id="right_column">
-        <div class="block" id="post_block">
-            <div class="block">
-                <h2 class="title is-2">
-                    Add a Post
-                </p>
+            <div class="box">
+                <article class="media">
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img src="{{ post.user.profile_picture.url }}"
+                                 alt="Image"
+                                 class="dashboard_pfp">
+                        </figure>
+                        <figure class="image is-24x24">
+                            <img src="{% get_media_prefix %}/images/triangle_up.png"
+                                 alt="upvote_triangle_button"
+                                 class="upvote_triangle">
+                        </figure>
+                        <figure class="image is-24x24">
+                            <img src="{% get_media_prefix %}/images/triangle_down.png"
+                                 alt="upvote_triangle_button"
+                                 class="upvote_triangle">
+                        </figure>
+                    </div>
+                    <a class="post" href="{% url 'posty:post_detail' post.pk %}">
+                        <div class="media-content">
+                            <div class="content">
+                                <p class="post-body">
+                                    <strong>{{ post.user.username }}</strong> <small>@{{ post.user.username }}</small> <small>{{ post.created_at }}</small>
+                                    <br>
+                                    {{ post.body|truncatechars:80 }}
+                                </p>
+                                <span class="is-small has-text-grey-light">
+                                    <p class="post_karma">K: {{ post.post_karma }}</p>
+                                    <p class="post_comments">Comments: {{ post.comment_count }}</p>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
             </div>
-            <div class="block">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="button is-success is-fullwidth is-medium mt-5 has-background-info"
-                            type="submit">Post</button>
-                </form>
-            </div>
+        </a>
+        <br>
+    {% endfor %}
+</div>
+<div class="column is-one-fifth" id="right_column">
+    <div class="block" id="post_block">
+        <div class="block">
+            <h2 class="title is-2">
+                Add a Post
+            </p>
+        </div>
+        <div class="block">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="button is-success is-fullwidth is-medium mt-5 has-background-info"
+                        type="submit">Post</button>
+            </form>
         </div>
     </div>
-    <script src="{% static 'js/dashboard.js' %}"></script>
-    <script type="text/javascript">
+</div>
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script type="text/javascript">
         // move post form area with scroll keeping in same alignment using jquery
         $(document).ready(function () {
             var nav = $('#post_block');
@@ -116,5 +143,6 @@
             });
         });
 
-    </script>
+</script>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
 {% endblock content %}
