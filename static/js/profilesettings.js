@@ -88,7 +88,7 @@ $('.changeemailconfirm').click(function () {
                     alert("email Changed!");
                 }
                 else {
-                    alert("An error occured! Make sure the email is not empty.");
+                    alert("An error occured! Make sure the email is not empty or that the email is valid.");
                 }
                 location.reload();
             }

@@ -292,7 +292,7 @@ def changeEmail(request):
         user_id = int(request.GET["user_id"])
         user = User.objects.get(pk=user_id)
         user.email = request.GET["email"]
-        if user.email == "":
+        if user.email == "" or "@" not in user.email or "." not in user.email:
             return HttpResponse("False")
         user.save()
         return HttpResponse("True")
