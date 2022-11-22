@@ -99,9 +99,47 @@ $('.changeimage').click(function () {
     var changebutton = $('.changeimage')[0];
     var changebuttonconfirm = $(".changeimageconfirm")[0];
     var changebuttoncancel = $(".changeimagecancel")[0];
-    pfp.replaceWith('<input type="file" id="img" name="img" accept="image/*">');
+    var src = pfp.attr('src');
+    pfp.replaceWith('<input data-src="'+src+'" type="file" class="img" id="img" name="img" accept="image/*">');
     changebuttonconfirm.style.display = "inline";
     changebuttoncancel.style.display = "inline";
     changebutton.style.display = "none";
 });
-
+$('.changeimagecancel').click(function () {
+    var pfp = $('#img');
+    var changebutton = $('.changeimage')[0];
+    var changebuttonconfirm = $(".changeimageconfirm")[0];
+    var changebuttoncancel = $(".changeimagecancel")[0];
+    var src = pfp.attr('data-src');
+    pfp.replaceWith('<img id="image-body" class="image-body image is-96x96" src=' + src + '>');
+    changebuttonconfirm.style.display = "none";
+    changebutton.style.display = "inline";
+    changebuttoncancel.style.display = "none";
+});
+$('.changeimageconfirm').click(function () {
+    var userid;
+    var image;
+    var changebutton = $('.changeimage')[0];
+    var changebuttonconfirm = $(".changeimageconfirm")[0];
+    userid = $(this).attr("data-userid");
+    image = $('#img').val();
+    $.ajax(
+        {
+            type: "GET",
+            url: "/profile_settings/changeimage",
+            data: {
+                user_id: userid,
+                image: image
+            },
+            success: function (data) {
+                console.log(data);
+                if (data == "True") {
+                    alert("Image Changed!");
+                }
+                else {
+                    alert("An error occured! Make sure the image is not empty.");
+                }
+                location.reload();
+            }
+        })
+});
