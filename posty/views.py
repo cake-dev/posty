@@ -1,7 +1,7 @@
 import datetime
 from django.shortcuts import render, redirect
 from .models import Post, Profile, Upvoted, Downvoted, Comment
-from .forms import PostForm
+from .forms import PostForm, ProfileChangeForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from accounts.models import User
@@ -70,6 +70,13 @@ def profile(request, pk):
 
 def profile_settings(request, pk):
     profile = Profile.objects.get(pk=pk)
+    form = ProfileChangeForm(
+        request.POST or None, request.FILES or None, instance=profile
+    )
+    if form.is_valid():
+        img = form.cleaned_data["image"]
+        form.save()
+        return redirect("posty:profile_settings", pk=pk)
     return render(request, "posty/profile_settings.html", {"profile": profile})
 
 
@@ -271,8 +278,34 @@ def changeName(request):
     if request.method == "GET":
         user_id = int(request.GET["user_id"])
         user = User.objects.get(pk=user_id)
-        user.name = request.GET["name"]
-        if user.name == "":
+        user.username = request.GET["name"]
+        if user.username == "":
+            return HttpResponse("False")
+        user.save()
+        return HttpResponse("True")
+    else:
+        return HttpResponse("Request method is not a GET")
+
+
+def changeEmail(request):
+    if request.method == "GET":
+        user_id = int(request.GET["user_id"])
+        user = User.objects.get(pk=user_id)
+        user.email = request.GET["email"]
+        if user.email == "":
+            return HttpResponse("False")
+        user.save()
+        return HttpResponse("True")
+    else:
+        return HttpResponse("Request method is not a GET")
+
+
+def changeProfilePicture(request):
+    if request.method == "GET":
+        user_id = int(request.GET["user_id"])
+        user = User.objects.get(pk=user_id)
+        user.profile_picture = request.GET["profile_picture"]
+        if user.profile_picture == "":
             return HttpResponse("False")
         user.save()
         return HttpResponse("True")
