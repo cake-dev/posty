@@ -9,7 +9,6 @@ from django.urls import reverse_lazy
 from django.urls import reverse
 
 
-
 @login_required
 def dashboard(request):
     # form = PostForm(request.POST or None)
@@ -69,12 +68,21 @@ def profile(request, pk):
     return render(request, "posty/profile.html", {"profile": profile})
 
 
+def profile_settings(request, pk):
+    profile = Profile.objects.get(pk=pk)
+    return render(request, "posty/profile_settings.html", {"profile": profile})
+
+
 def postDetailView(request, pk):
     post = Post.objects.get(pk=pk)
     return render(
         request,
         "posty/post_detail.html",
-        {"post": post, "comment": Comment.objects.filter(post=post), "currentuser": request.user},
+        {
+            "post": post,
+            "comment": Comment.objects.filter(post=post),
+            "currentuser": request.user,
+        },
     )
 
 
@@ -202,6 +210,7 @@ def deletePost(request):
     else:
         return HttpResponse("Request method is not a GET")
 
+
 def updatePost(request):
     if request.method == "GET":
         post_id = request.GET["post_id"]
@@ -211,7 +220,7 @@ def updatePost(request):
 
         if post.user.id == user_id:
             post.body = request.GET["body"]
-            if(post.body == ""):
+            if post.body == "":
                 return HttpResponse("False")
             post.save()
             return HttpResponse("True")
@@ -219,6 +228,7 @@ def updatePost(request):
             return HttpResponse("False")
     else:
         return HttpResponse("Request method is not a GET")
+
 
 def deleteComment(request):
     if request.method == "GET":
@@ -238,6 +248,7 @@ def deleteComment(request):
     else:
         return HttpResponse("Request method is not a GET")
 
+
 def updateComment(request):
     if request.method == "GET":
         comment_id = request.GET["comment_id"]
@@ -246,11 +257,24 @@ def updateComment(request):
         # user = User.objects.get(pk=user_id)
         if comment.user.id == user_id:
             comment.body = request.GET["body"]
-            if(comment.body == ""):
+            if comment.body == "":
                 return HttpResponse("False")
             comment.save()
             return HttpResponse("True")
         else:
             return HttpResponse("False")
+    else:
+        return HttpResponse("Request method is not a GET")
+
+
+def changeName(request):
+    if request.method == "GET":
+        user_id = int(request.GET["user_id"])
+        user = User.objects.get(pk=user_id)
+        user.name = request.GET["name"]
+        if user.name == "":
+            return HttpResponse("False")
+        user.save()
+        return HttpResponse("True")
     else:
         return HttpResponse("Request method is not a GET")

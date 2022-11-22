@@ -32,6 +32,7 @@
         {% endfor %}
     </div>
     <script>
+        {% comment %} handles profile search autocomplete {% endcomment %}
     $(function () {
         var availableTags = [
             {% for profile in profiles %}                "{{ profile.user.username }}",{% endfor %}
