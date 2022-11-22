@@ -94,3 +94,14 @@ $('.changeemailconfirm').click(function () {
             }
         })
 });
+$('.changeimage').click(function () {
+    var pfp = $('#image-body');
+    var changebutton = $('.changeimage')[0];
+    var changebuttonconfirm = $(".changeimageconfirm")[0];
+    var changebuttoncancel = $(".changeimagecancel")[0];
+    pfp.replaceWith('<input type="file" id="img" name="img" accept="image/*">');
+    changebuttonconfirm.style.display = "inline";
+    changebuttoncancel.style.display = "inline";
+    changebutton.style.display = "none";
+});
+
