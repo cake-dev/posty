@@ -302,8 +302,11 @@ def changeEmail(request):
 
 def changeProfilePicture(request):
     if request.method == "GET":
+        print("asd")
         user_id = int(request.GET["user_id"])
         user = User.objects.get(pk=user_id)
+        pfp = request.GET["image"]
+        print(pfp)
         user.profile_picture = request.GET["profile_picture"]
         if user.profile_picture == "":
             return HttpResponse("False")

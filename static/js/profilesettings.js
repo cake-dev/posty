@@ -118,20 +118,20 @@ $('.changeimagecancel').click(function () {
 });
 $('.changeimageconfirm').click(function () {
     var userid;
-    var image;
-    var changebutton = $('.changeimage')[0];
-    var changebuttonconfirm = $(".changeimageconfirm")[0];
+    var image = document.getElementById("img").files[0];
+    var data = new FormData();
+    data.append("img", image);
     userid = $(this).attr("data-userid");
-    image = $('#img').val();
     $.ajax(
         {
             type: "GET",
-            url: "/profile_settings/changeimage",
+            url: "/profile_settings/changepfp",
             data: {
                 user_id: userid,
-                image: image
+                image: data
             },
             success: function (data) {
+                alert("Sdsd")
                 console.log(data);
                 if (data == "True") {
                     alert("Image Changed!");
@@ -142,4 +142,5 @@ $('.changeimageconfirm').click(function () {
                 location.reload();
             }
         })
+        alert("Image Changed!");
 });

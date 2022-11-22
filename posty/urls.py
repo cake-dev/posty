@@ -27,6 +27,7 @@ urlpatterns = [
     path("profile_settings/<int:pk>/", profile_settings, name="profile_settings"),
     path("profile_settings/changename", views.changeName, name="changename"),
     path("profile_settings/changeemail", views.changeEmail, name="changeemail"),
+    path("profile_settings/changepfp", views.changeProfilePicture, name="changeProfilePicture"),
 ]
 
 if settings.DEBUG:
