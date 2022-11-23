@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from accounts.models import User
 from django.urls import reverse_lazy
 from django.urls import reverse
+from datetime import datetime
 
 
 @login_required
@@ -264,6 +265,8 @@ def updateComment(request):
         # user = User.objects.get(pk=user_id)
         if comment.user.id == user_id:
             comment.body = request.GET["body"]
+            comment.editied = True
+            comment.editied_on = datetime
             if comment.body == "":
                 return HttpResponse("False")
             comment.save()

@@ -36,7 +36,8 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
     body = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    editied = models.BooleanField(default=False)
+ 
     def __str__(self):
         return f"{self.user.username} - {self.created_at.strftime('%Y-%m-%d')} - {self.body[:30]}"
 

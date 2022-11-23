@@ -73,6 +73,9 @@
                 <div style="display:inline">
                     <a style="display:inline" href="/profile/{{ c.user.id }}">{{ c.user.username }}</a>:
                     <p style="display:inline" id="comment-body">{{ c.body }}</p>
+                    {% if c.edited %}
+                    <p style="display:inline" id="comment-editied">(Editied)</p>
+                    {% endif %}
                 </div>
                 {% comment %} Edit and delete comments {% endcomment %}
                 {% if currentuser.id == c.user.id %}
