@@ -70,8 +70,6 @@ $('.changeemailcancel').click(function () {
 $('.changeemailconfirm').click(function () {
     var userid;
     var email;
-    var changebutton = $('.changeemail')[0];
-    var changebuttonconfirm = $(".changeemailconfirm")[0];
     userid = $(this).attr("data-userid");
     email = $('#email-body').text();
     $.ajax(
@@ -100,7 +98,8 @@ $('.changeimage').click(function () {
     var changebuttonconfirm = $(".changeimageconfirm")[0];
     var changebuttoncancel = $(".changeimagecancel")[0];
     var src = pfp.attr('src');
-    pfp.replaceWith('<input data-src="'+src+'" type="file" class="img" id="img" name="img" accept="image/*">');
+    var user_id = pfp.attr("data-userid");
+    pfp.replaceWith('<input data-userid="' + user_id + '" data-src="' + src + '" type="file" class="img" id="img" name="img" accept="image/*">');
     changebuttonconfirm.style.display = "inline";
     changebuttoncancel.style.display = "inline";
     changebutton.style.display = "none";
@@ -111,7 +110,9 @@ $('.changeimagecancel').click(function () {
     var changebuttonconfirm = $(".changeimageconfirm")[0];
     var changebuttoncancel = $(".changeimagecancel")[0];
     var src = pfp.attr('data-src');
-    pfp.replaceWith('<img id="image-body" class="image-body image is-96x96" src=' + src + '>');
+    var user_id = pfp.attr("data-userid");
+    var user_id = pfp.attr('data-userid');
+    pfp.replaceWith('<img id="image-body" class="image-body image is-96x96" src=' + src + 'data-userid='+user_id+'>');
     changebuttonconfirm.style.display = "none";
     changebutton.style.display = "inline";
     changebuttoncancel.style.display = "none";
@@ -121,20 +122,19 @@ $('.changeimageconfirm').click(function () {
     var image = document.getElementById("img").files[0];
     var data = new FormData();
     data.append("img", image);
-    userid = $(this).attr("data-userid");
+    data.append("user_id", $(this).attr("data-userid"));
     $.ajax(
         {
-            type: "GET",
+            type: "POST",
             url: "/profile_settings/changepfp",
-            data: {
-                user_id: userid,
-                image: data
-            },
+            mimeType: "multipart/form-data",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
             success: function (data) {
-                alert("Sdsd")
-                console.log(data);
                 if (data == "True") {
-                    alert("Image Changed!");
+                    alert("image Changed!");
                 }
                 else {
                     alert("An error occured! Make sure the image is not empty.");
@@ -142,5 +142,4 @@ $('.changeimageconfirm').click(function () {
                 location.reload();
             }
         })
-        alert("Image Changed!");
 });

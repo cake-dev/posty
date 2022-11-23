@@ -130,9 +130,12 @@
                         <p id="email-body">{{ user.email }}</p>
                     </td>
                     <td>
+                        <form id="upload-file" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <img id="image-body"
                              class="image is-96x96"
-                             src="{{ user.profile_picture.url }}">
+                             src="{{ user.profile_picture.url }}" data-userid={{ user.id }}>
+                        </form>
                     </td>
                 </tr>
             </tbody>
