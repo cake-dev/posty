@@ -40,7 +40,7 @@ def dashboard(request):
     ).order_by(ordering[sorting])
 
     # get current date_time
-    now = datetime.datetime.now()
+    now = datetime.now()
 
     return render(
         request,

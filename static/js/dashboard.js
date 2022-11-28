@@ -30,3 +30,7 @@ function hideError() {
 //     }
 //   });
 // });
+
+function upvoteSVG(this) {
+  this.style.fill = "red";
+}
