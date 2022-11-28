@@ -53,7 +53,7 @@
                                     {% comment %} profile settings list item with link to profile settings with user pk {% endcomment %}
                                     <li>
                                         <a class="dropdown-item"
-                                           href="{% url 'posty:profile_settings' user.pk %}">Profile Settings</a>
+                                           href="{% url 'accounts:edit_profile' user.pk %}">Edit Profile</a>
                                         <li>
                                             <a class="dropdown-item" href="{% url 'password_change' %}">Change password</a>
                                         </li>
