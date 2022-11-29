@@ -98,4 +98,5 @@ class ProfileChangeForm(forms.ModelForm):
         )
         help_texts = {
             "password ": (""),
+            "username": ("Username"),
         }

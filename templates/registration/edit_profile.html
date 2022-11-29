@@ -8,8 +8,15 @@
         <h3>Edit Profile</h3>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form|crispy }}
             <button class="btn btn-success" type="submit">Confirm Changes</button>
         </form>
     </div>
+    <script type="text/javascript">
+        $("#div_id_username").prepend("<div class='username-title'>Username:</div>");
+        $("#div_id_email").prepend("<div class='email-title'>Email:</div>");
+        $("#div_id_profile_picture").prepend("<div class='email-title'>Profile Picture:</div>");
+        {% comment %} hides password options (not valid here) {% endcomment %}
+        $("#div_id_password").css("display", "none");
+    </script>
 {% endblock content %}
