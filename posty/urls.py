@@ -4,7 +4,7 @@ from django.urls import path
 from .views import dashboard, profile_list, profile
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import dashboard, profile_list, profile, postDetailView, profile_settings
+from .views import dashboard, profile_list, profile, postDetailView
 from . import views
 
 
@@ -24,10 +24,6 @@ urlpatterns = [
     path("post_detail/<int:pk>/", postDetailView, name="post_detail"),
     path("profile_list/", profile_list, name="profile_list"),
     path("profile/<int:pk>/", profile, name="profile"),
-    path("profile_settings/<int:pk>/", profile_settings, name="profile_settings"),
-    path("profile_settings/changename", views.changeName, name="changename"),
-    path("profile_settings/changeemail", views.changeEmail, name="changeemail"),
-    path("profile_settings/changepfp", views.changePFP, name="changepfp"),
 ]
 
 if settings.DEBUG:

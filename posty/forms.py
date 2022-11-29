@@ -96,3 +96,6 @@ class ProfileChangeForm(forms.ModelForm):
             "email",
             "profile_picture",
         )
+        help_texts = {
+            "password ": (""),
+        }

@@ -74,3 +74,4 @@ class CustomUserChangeForm(UserChangeForm):
             "email",
             "profile_picture",
         )
+        exclude = ("password",)

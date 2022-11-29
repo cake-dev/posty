@@ -69,18 +69,6 @@ def profile(request, pk):
     return render(request, "posty/profile.html", {"profile": profile})
 
 
-def profile_settings(request, pk):
-    profile = Profile.objects.get(pk=pk)
-    form = ProfileChangeForm(
-        request.POST or None, request.FILES or None, instance=profile
-    )
-    if form.is_valid():
-        img = form.cleaned_data["image"]
-        form.save()
-        return redirect("posty:profile_settings", pk=pk)
-    return render(request, "posty/profile_settings.html", {"profile": profile})
-
-
 def postDetailView(request, pk):
     post = Post.objects.get(pk=pk)
     return render(
@@ -273,46 +261,5 @@ def updateComment(request):
             return HttpResponse("True")
         else:
             return HttpResponse("False")
-    else:
-        return HttpResponse("Request method is not a GET")
-
-
-def changeName(request):
-    if request.method == "GET":
-        user_id = int(request.GET["user_id"])
-        user = User.objects.get(pk=user_id)
-        user.username = request.GET["name"]
-        if user.username == "":
-            return HttpResponse("False")
-        user.save()
-        return HttpResponse("True")
-    else:
-        return HttpResponse("Request method is not a GET")
-
-
-def changeEmail(request):
-    if request.method == "GET":
-        user_id = int(request.GET["user_id"])
-        user = User.objects.get(pk=user_id)
-        user.email = request.GET["email"]
-        if user.email == "" or "@" not in user.email or "." not in user.email:
-            return HttpResponse("False")
-        user.save()
-        return HttpResponse("True")
-    else:
-        return HttpResponse("Request method is not a GET")
-
-
-def changePFP(request):
-    if request.method == "POST":
-        # user_id = int(request.GET["user_id"])
-        # user = User.objects.get(pk=user_id)
-        pfp = request.__dict__
-        print(pfp)
-        # user.profile_picture = request.GET["profile_picture"]
-        # if user.profile_picture == "":
-        #     return HttpResponse("False")
-        # user.save()
-        return HttpResponse("True")
     else:
         return HttpResponse("Request method is not a GET")
