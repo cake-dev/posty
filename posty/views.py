@@ -42,10 +42,25 @@ def dashboard(request):
     # get current date_time
     now = datetime.now()
 
+    # get users upvoted/downvoted posts
+    upvoted_posts = Upvoted.objects.filter(user=request.user).values_list(
+        "post", flat=True
+    )
+    downvoted_posts = Downvoted.objects.filter(user=request.user).values_list(
+        "post", flat=True
+    )
+
     return render(
         request,
         "posty/dashboard.html",
-        {"form": form, "posts": followed_posts, "comment": Comment, "now": now},
+        {
+            "form": form,
+            "posts": followed_posts,
+            "comment": Comment,
+            "now": now,
+            "upvoted_posts": upvoted_posts,
+            "downvoted_posts": downvoted_posts,
+        },
     )
 
 

@@ -4,6 +4,7 @@
     {% load static %}
     {% comment %} link static stylesheet {% endcomment %}
     {% comment %} link static javascript {% endcomment %}
+    <script src="{% static 'js/dashboard.js' %}" type="text/javascript"></script>
     <div class="column is-three-fifths">
         <div class="container">
             <div class="row">
@@ -73,7 +74,7 @@
                                  class="bi bi-caret-up upvote-svg"
                                  viewBox="0 0 16 16"
                                  id="upvote_tri_{{ post.id }}"
-                                 onclick="upvoteSVG()">
+                                 onclick="upvoteSVG({{ post.id }},{{ user.id }})">
                                 <path d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z"/>
                             </svg>
                         </figure>
@@ -82,10 +83,10 @@
                                  width="32"
                                  height="32"
                                  fill="currentColor"
-                                 class="bi bi-caret-down"
+                                 class="bi bi-caret-down downvote-svg"
                                  id="downvote_tri_{{ post.id }}"
                                  viewBox="0 0 16 16"
-                                 onclick="logclick()">
+                                 onclick="downvoteSVG({{ post.id }},{{ user.id }})">
                                 <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
                             </svg>
                         </figure>
@@ -128,6 +129,8 @@
         </div>
     </div>
 </div>
+{% for u_post in upvoted_posts.all %}<script>fillUpvoted({{ u_post }})</script>{% endfor %}
+{% for d_post in downvoted_posts.all %}<script>fillDownvoted({{ d_post }})</script>{% endfor %}
 <script type="text/javascript">
         // move post form area with scroll keeping in same alignment using jquery
         $(document).ready(function () {
@@ -157,6 +160,5 @@
         });
 
 </script>
-<script src="{% static 'js/dashboard.js' %}" type="text/javascript"></script>
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
 {% endblock content %}
