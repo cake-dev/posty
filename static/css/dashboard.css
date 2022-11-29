@@ -6,3 +6,19 @@
 .post-body {
     color: rgba(0, 0, 0, 0.699);
 }
+
+.posty-post {
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    border: 1px solid rgb(92, 92, 92);
+    padding: 10px;
+}
+
+.karma_score {
+    text-align: center;
+    font-size: 12px;
+}
+
+.vote_buttons {
+    text-align: left;
+}

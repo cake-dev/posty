@@ -58,7 +58,7 @@
         </div>
         {% comment %} {% for post in posts.all|dictsortreversed:"comment_count" %} {% endcomment %}
         {% for post in posts.all %}
-            <div class="box">
+            <div class="box posty-post">
                 <article class="media">
                     <div class="media-left">
                         <figure class="image is-64x64">
@@ -66,30 +66,35 @@
                                  alt="Image"
                                  class="dashboard_pfp">
                         </figure>
-                        <figure class="image is-24x24">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="32"
-                                 height="32"
-                                 fill="currentColor"
-                                 class="bi bi-caret-up upvote-svg"
-                                 viewBox="0 0 16 16"
-                                 id="upvote_tri_{{ post.id }}"
-                                 onclick="upvoteSVG({{ post.id }},{{ user.id }})">
-                                <path d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z"/>
-                            </svg>
-                        </figure>
-                        <figure class="image is-24x24">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="32"
-                                 height="32"
-                                 fill="currentColor"
-                                 class="bi bi-caret-down downvote-svg"
-                                 id="downvote_tri_{{ post.id }}"
-                                 viewBox="0 0 16 16"
-                                 onclick="downvoteSVG({{ post.id }},{{ user.id }})">
-                                <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
-                            </svg>
-                        </figure>
+                        <div class="col vote_buttons">
+                            <div class="row">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="32"
+                                     height="32"
+                                     fill="currentColor"
+                                     class="bi bi-caret-up upvote-svg"
+                                     viewBox="0 0 16 16"
+                                     id="upvote_tri_{{ post.id }}"
+                                     onclick="upvoteSVG({{ post.id }},{{ user.id }})">
+                                    <path d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z"/>
+                                </svg>
+                            </div>
+                            <div class="row">
+                                <p class="karma_score">{{ post.post_karma }}</p>
+                            </div>
+                            <div class="row">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="32"
+                                     height="32"
+                                     fill="currentColor"
+                                     class="bi bi-caret-down downvote-svg"
+                                     id="downvote_tri_{{ post.id }}"
+                                     viewBox="0 0 16 16"
+                                     onclick="downvoteSVG({{ post.id }},{{ user.id }})">
+                                    <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                     <a class="post" href="{% url 'posty:post_detail' post.pk %}">
                         <div class="media-content">
@@ -98,9 +103,16 @@
                                     <strong>{{ post.user.username }}</strong> <small>@{{ post.user.username }}</small> <small>{{ post.created_at }}</small>
                                     <br>
                                     {{ post.body|truncatechars:80 }}
+                                    {% comment %} if post body length less than 1, truncatechars
+                                    {% if post.body|length < 2 %}
+                                        <p>{{ post.body|truncatechars:60 }}</p>
+                                    {% else %}
+                                        {% with body=post.body|wordwrap:50 %}
+                                            <p id="post-text">{{ body }}</p>
+                                        {% endwith %}
+                                    {% endif %} {% endcomment %}
                                 </p>
                                 <span class="is-small has-text-grey-light">
-                                    <p class="post_karma">K: {{ post.post_karma }}</p>
                                     <p class="post_comments">Comments: {{ post.comment_count }}</p>
                                 </span>
                             </div>
