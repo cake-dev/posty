@@ -73,12 +73,12 @@
                 {% comment %} ="{% url 'posty:profile' comment.pk %}"> {% endcomment %}
                 <div style="display:inline">
                     <a style="display:inline" href="/profile/{{ c.user.id }}">{{ c.user.username }}</a>:
-                    <p style="display:inline" id="comment-body">{{ c.body }}</p>
+                    <p style="display:inline" id="{{ c.id }}" class="comment-body">{{ c.body }}</p>
                     {% if c.edited %}<p style="display:inline" id="comment-editied">(Editied)</p>{% endif %}
                 </div>
                 {% comment %} Edit and delete comments {% endcomment %}
                 {% if currentuser.id == c.user.id %}
-                    <a rel="no-refresh" id="updatecomment{{ c.id }}" class="updatecomment">
+                    <a rel="no-refresh" id="{{ c.id }}" class="updatecomment">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="13"
                              height="13"
@@ -89,7 +89,7 @@
                         </svg>
                     </a>
                     <a class="updatecommentconfirm"
-                       id="updatecommentconfirm{{ c.id }}"
+                       id="{{ c.id }}"
                        href=""
                        data-userid="{{ user.id }}"
                        data-catid="{{ c.id }}"
@@ -103,48 +103,47 @@
                             <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
                             <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
                         </svg>
-                        <a style="display:none"
-                           class="updatecommentcancel"
-                           id="updatecommentcancel">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 width="13"
-                                 height="13"
-                                 fill="currentColor"
-                                 class="bi bi-x-octagon-fill"
-                                 viewBox="0 0 16 16">
-                                <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
-                            </svg>
-                        </a>
                     </a>
-                    <a class="deletecomment"
-                       id="deletecomment{{ c.id }}"
-                       href=""
-                       data-userid="{{ user.id }}"
-                       data-catid="{{ c.id }}"
-                       data-postid="{{ post.id }}">
+                    <a style="display:none" class="updatecommentcancel" id="{{ c.id }}">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="13"
                              height="13"
                              fill="currentColor"
-                             class="bi bi-trash-fill"
+                             class="bi bi-x-octagon-fill"
                              viewBox="0 0 16 16">
-                            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                            <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
                         </svg>
                     </a>
-                {% endif %}
-            </p>
-        {% endfor %}
-        <textarea id="comment{{post.id}}" class="textarea is-info" rows="4"></textarea>
-        <br>
-        <a class="commentbutton"
-           id="commentbutton{{ post.id }}"
-           href=""
-           data-userid="{{ user.id }}"
-           data-catid="{{ post.id }}">
-            <button class="button is-success has-background-info">Comment</button>
-        </a>
-    </div>
-    {% comment %} Ajax {% endcomment %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script src="{% static 'js/postdetail.js' %}"></script>
+                </a>
+                <a class="deletecomment"
+                   id="deletecomment{{ c.id }}"
+                   href=""
+                   data-userid="{{ user.id }}"
+                   data-catid="{{ c.id }}"
+                   data-postid="{{ post.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="13"
+                         height="13"
+                         fill="currentColor"
+                         class="bi bi-trash-fill"
+                         viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </a>
+            {% endif %}
+        </p>
+    {% endfor %}
+    <textarea id="comment{{post.id}}" class="textarea is-info" rows="4"></textarea>
+    <br>
+    <a class="commentbutton"
+       id="commentbutton{{ post.id }}"
+       href=""
+       data-userid="{{ user.id }}"
+       data-catid="{{ post.id }}">
+        <button class="button is-success has-background-info">Comment</button>
+    </a>
+</div>
+{% comment %} Ajax {% endcomment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="{% static 'js/postdetail.js' %}"></script>
 {% endblock content %}

@@ -212,16 +212,20 @@ $('.deletecomment').click(function () {
         })
 });
 $('.updatecomment').click(function () {
-    var body = $('#comment-body');
-    var updatebutton = $('.updatecomment')[0];
-    var deletebutton = $('.deletecomment')[0];
-    var updatebuttonconfirm = $(".updatecommentconfirm")[0];
-    var updatebuttoncancel = $(".updatecommentcancel")[0];
+    // Fixed the commenting error with the following code
+    var comment_id = $(this).attr("id");
+    var body = $('#'+comment_id + ".comment-body ");
+    var updatebutton = $('#'+comment_id + ".updatecomment ");
+    var deletebutton = $('#'+comment_id + ".deletecomment ");
+    var updatebuttonconfirm = $('#'+comment_id + ".updatecommentconfirm ");
+    var updatebuttoncancel =  $('#'+comment_id + ".updatecommentcancel ");
+    alert(updatebuttonconfirm.attr("id"));
     body.replaceWith('<textarea id="body" class="textarea is-info" rows="1" spellcheck="true">' + body.text() + '</textarea>');
-    updatebuttonconfirm.style.display = "inline";
-    updatebuttoncancel.style.display = "inline";
-    updatebutton.style.display = "none";
-    deletebutton.style.display = "none";
+    updatebutton.attr("style", "display:none");
+    deletebutton.attr("style", "display:none");
+    updatebuttonconfirm.attr("style", "display:inline");
+    updatebuttoncancel.attr("style", "display:inline");
+
 });
 $('.updatecommentcancel').click(function () {
     var body = $('#body');
