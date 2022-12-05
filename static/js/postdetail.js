@@ -219,7 +219,7 @@ $('.updatecomment').click(function () {
     var deletebutton = $('#'+comment_id + ".deletecomment ");
     var updatebuttonconfirm = $('#'+comment_id + ".updatecommentconfirm ");
     var updatebuttoncancel =  $('#'+comment_id + ".updatecommentcancel ");
-    alert(updatebuttonconfirm.attr("id"));
+    // alert(updatebuttonconfirm.attr("id"));
     body.replaceWith('<textarea id="body" class="textarea is-info" rows="1" spellcheck="true">' + body.text() + '</textarea>');
     updatebutton.attr("style", "display:none");
     deletebutton.attr("style", "display:none");
