@@ -268,8 +268,7 @@ def updateComment(request):
         # user = User.objects.get(pk=user_id)
         if comment.user.id == user_id:
             comment.body = request.GET["body"]
-            comment.editied = True
-            comment.editied_on = datetime
+            comment.edited = True
             if comment.body == "":
                 return HttpResponse("False")
             comment.save()
