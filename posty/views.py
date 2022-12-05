@@ -1,9 +1,13 @@
+import datetime
 from django.shortcuts import render, redirect
 from .models import Post, Profile, Upvoted, Downvoted, Comment
-from .forms import PostForm
+from .forms import PostForm, ProfileChangeForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from accounts.models import User
+from django.urls import reverse_lazy
+from django.urls import reverse
+from datetime import datetime
 
 
 @login_required
@@ -35,10 +39,28 @@ def dashboard(request):
         user__profile__in=request.user.profile.follows.all()
     ).order_by(ordering[sorting])
 
+    # get current date_time
+    now = datetime.now()
+
+    # get users upvoted/downvoted posts
+    upvoted_posts = Upvoted.objects.filter(user=request.user).values_list(
+        "post", flat=True
+    )
+    downvoted_posts = Downvoted.objects.filter(user=request.user).values_list(
+        "post", flat=True
+    )
+
     return render(
         request,
         "posty/dashboard.html",
-        {"form": form, "posts": followed_posts, "comment": Comment},
+        {
+            "form": form,
+            "posts": followed_posts,
+            "comment": Comment,
+            "now": now,
+            "upvoted_posts": upvoted_posts,
+            "downvoted_posts": downvoted_posts,
+        },
     )
 
 
@@ -67,7 +89,11 @@ def postDetailView(request, pk):
     return render(
         request,
         "posty/post_detail.html",
-        {"post": post, "comment": Comment.objects.filter(post=post)},
+        {
+            "post": post,
+            "comment": Comment.objects.filter(post=post),
+            "currentuser": request.user,
+        },
     )
 
 
@@ -180,18 +206,74 @@ def comment(request):
         return HttpResponse("Request method is not a GET")
 
 
-# def deletePost(request):
-# if request.method == "GET":
-#     post_id = request.GET["post_id"]
-#     user_id = int(request.GET["user_id"])
-#     post = Post.objects.get(pk=post_id)
-#     # user = User.objects.get(pk=user_id)
+def deletePost(request):
+    if request.method == "GET":
+        post_id = request.GET["post_id"]
+        user_id = int(request.GET["user_id"])
+        post = Post.objects.get(pk=post_id)
+        # user = User.objects.get(pk=user_id)
 
-#     if post.user.id == user_id:
-#         print("Success!")
-#         post.delete()
-#         return redirect("posty:dashboard")
-#     else:
-#         return HttpResponse("You can't delete this post!")
-# else:
-#     return HttpResponse("Request method is not a GET")
+        if post.user.id == user_id:
+            post.delete()
+            return HttpResponse("True")
+        else:
+            return HttpResponse("False")
+    else:
+        return HttpResponse("Request method is not a GET")
+
+
+def updatePost(request):
+    if request.method == "GET":
+        post_id = request.GET["post_id"]
+        user_id = int(request.GET["user_id"])
+        post = Post.objects.get(pk=post_id)
+        # user = User.objects.get(pk=user_id)
+
+        if post.user.id == user_id:
+            post.body = request.GET["body"]
+            if post.body == "":
+                return HttpResponse("False")
+            post.save()
+            return HttpResponse("True")
+        else:
+            return HttpResponse("False")
+    else:
+        return HttpResponse("Request method is not a GET")
+
+
+def deleteComment(request):
+    if request.method == "GET":
+        comment_id = request.GET["comment_id"]
+        user_id = int(request.GET["user_id"])
+        post_id = int(request.GET["post_id"])
+        comment = Comment.objects.get(pk=comment_id)
+        post = Post.objects.get(pk=post_id)
+        # user = User.objects.get(pk=user_id)
+        if comment.user.id == user_id:
+            post.comment_count -= 1
+            post.save()
+            comment.delete()
+            return HttpResponse("True")
+        else:
+            return HttpResponse("False")
+    else:
+        return HttpResponse("Request method is not a GET")
+
+
+def updateComment(request):
+    if request.method == "GET":
+        comment_id = request.GET["comment_id"]
+        user_id = int(request.GET["user_id"])
+        comment = Comment.objects.get(pk=comment_id)
+        # user = User.objects.get(pk=user_id)
+        if comment.user.id == user_id:
+            comment.body = request.GET["body"]
+            comment.edited = True
+            if comment.body == "":
+                return HttpResponse("False")
+            comment.save()
+            return HttpResponse("True")
+        else:
+            return HttpResponse("False")
+    else:
+        return HttpResponse("Request method is not a GET")

@@ -2,6 +2,9 @@
 {% extends 'base.html' %}
 {% block content %}
     {% load static %}
+    {% comment %} link static stylesheet {% endcomment %}
+    {% comment %} link static javascript {% endcomment %}
+    <script src="{% static 'js/dashboard.js' %}" type="text/javascript"></script>
     <div class="column is-three-fifths">
         <div class="container">
             <div class="row">
@@ -55,40 +58,92 @@
         </div>
         {% comment %} {% for post in posts.all|dictsortreversed:"comment_count" %} {% endcomment %}
         {% for post in posts.all %}
-            <a class="post" href="{% url 'posty:post_detail' post.pk %}">
-                <div class="box">
-                    {% comment %} add post body to fit width of box {% endcomment %}
-                    <p>{{ post.body|truncatechars:80 }}</p>
-                    <span class="is-small has-text-grey-light">
-                        ({{ post.created_at }} by {{ post.user.username }})
-                        <br>
-                        <p class="post_karma">K: {{ post.post_karma }}</p>
-                        <p class="post_comments">Comments: {{ post.comment_count }}</p>
-                    </span>
-                </div>
-            </a>
-            <br>
-        {% endfor %}
-    </div>
-    <div class="column is-one-fifth" id="right_column">
-        <div class="block" id="post_block">
-            <div class="block">
-                <h2 class="title is-2">
-                    Add a Post
-                </p>
+            <div class="box posty-post">
+                <article class="media">
+                    <div class="media-left">
+                        <figure class="image is-64x64">
+                            <img src="{{ post.user.profile_picture.url }}"
+                                 alt="Image"
+                                 class="dashboard_pfp">
+                        </figure>
+                        <div class="col vote_buttons">
+                            <div class="row">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="32"
+                                     height="32"
+                                     fill="currentColor"
+                                     class="bi bi-caret-up upvote-svg"
+                                     viewBox="0 0 16 16"
+                                     id="upvote_tri_{{ post.id }}"
+                                     onclick="upvoteSVG({{ post.id }},{{ user.id }})">
+                                    <path d="M3.204 11h9.592L8 5.519 3.204 11zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659z"/>
+                                </svg>
+                            </div>
+                            <div class="row">
+                                <p class="karma_score">{{ post.post_karma }}</p>
+                            </div>
+                            <div class="row">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="32"
+                                     height="32"
+                                     fill="currentColor"
+                                     class="bi bi-caret-down downvote-svg"
+                                     id="downvote_tri_{{ post.id }}"
+                                     viewBox="0 0 16 16"
+                                     onclick="downvoteSVG({{ post.id }},{{ user.id }})">
+                                    <path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="post" href="{% url 'posty:post_detail' post.pk %}">
+                        <div class="media-content">
+                            <div class="content">
+                                <p class="post-body">
+                                    <strong>{{ post.user.username }}</strong> <small>@{{ post.user.username }}</small> <small>{{ post.created_at }}</small>
+                                    <br>
+                                    {{ post.body|truncatechars:80 }}
+                                    {% comment %} if post body length less than 1, truncatechars
+                                    {% if post.body|length < 2 %}
+                                        <p>{{ post.body|truncatechars:60 }}</p>
+                                    {% else %}
+                                        {% with body=post.body|wordwrap:50 %}
+                                            <p id="post-text">{{ body }}</p>
+                                        {% endwith %}
+                                    {% endif %} {% endcomment %}
+                                </p>
+                                <span class="is-small has-text-grey-light">
+                                    <p class="post_comments">Comments: {{ post.comment_count }}</p>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
             </div>
-            <div class="block">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button class="button is-success is-fullwidth is-medium mt-5 has-background-info"
-                            type="submit">Post</button>
-                </form>
-            </div>
+        </a>
+        <br>
+    {% endfor %}
+</div>
+<div class="column is-one-fifth" id="right_column">
+    <div class="block" id="post_block">
+        <div class="block">
+            <h2 class="title is-2">
+                Add a Post
+            </p>
+        </div>
+        <div class="block">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="button is-success is-fullwidth is-medium mt-5 has-background-info"
+                        type="submit">Post</button>
+            </form>
         </div>
     </div>
-    <script src="{% static 'js/dashboard.js' %}"></script>
-    <script type="text/javascript">
+</div>
+{% for u_post in upvoted_posts.all %}<script>fillUpvoted({{ u_post }})</script>{% endfor %}
+{% for d_post in downvoted_posts.all %}<script>fillDownvoted({{ d_post }})</script>{% endfor %}
+<script type="text/javascript">
         // move post form area with scroll keeping in same alignment using jquery
         $(document).ready(function () {
             var nav = $('#post_block');
@@ -116,5 +171,6 @@
             });
         });
 
-    </script>
+</script>
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
 {% endblock content %}

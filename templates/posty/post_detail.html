@@ -5,9 +5,12 @@
         {% comment %} Detail View {% endcomment %}
         <u>
             <h2>{{ post.user.username }}'s Post</h2>
+            {% comment %} <a href="{% url 'postman:write' post.user.pk %}">Message {{ post.user.username }}</a> {% endcomment %}
         </u>
         <br>
-        {{ post.body|wordwrap:60|linebreaks }}
+        {% with body=post.body|wordwrap:60 %}
+            <p id="post-body">{{ body }}</p>
+        {% endwith %}
         {% comment %} set width and height if image is default image {% endcomment %}
         {% if post.image.url == '/media/images/onebyone.png' %}
             <img src="{{ post.image.url }}"
@@ -15,9 +18,32 @@
                  height="0"
                  style="visibility: hidden">
         {% else %}
-            <img src="{{ post.image.url }}" width="300px" height="300px">
+            <img src="{{ post.image.url }}"
+                 width="300px"
+                 height="300px"
+                 class="post_d_image">
         {% endif %}
-        {% comment %} <a class="deletebutton" id="delete{{post.id}}" href="" data-userid="{{ user.id }}" data-catid="{{ post.id }}">Delete</a> {% endcomment %}
+        {% comment %} CRUD Section {% endcomment %}
+        {% if currentuser.id == post.user.id %}
+            <hr>
+            <a id="updatebutton" class="updatebutton" rel="no-refresh">Update</a>
+            <a class="updatebuttonconfirm"
+               id="updatebuttonconfirm{{ post.id }}"
+               href=""
+               data-userid="{{ user.id }}"
+               data-catid="{{ post.id }}"
+               style="display:none">Done</a>
+            <a id="updatebuttoncancel"
+               style="display:none"
+               style="display:none"
+               class="updatebuttoncancel"
+               rel="no-refresh">Cancel</a>
+            <a class="deletebutton"
+               id="delete{{ post.id }}"
+               href=""
+               data-userid="{{ user.id }}"
+               data-catid="{{ post.id }}">Delete</a>
+        {% endif %}
         <hr>
         {% comment %} Karma {% endcomment %}
         <p>Karma: {{ post.post_karma }}</p>
@@ -45,138 +71,79 @@
         {% for c in comment %}
             <p>
                 {% comment %} ="{% url 'posty:profile' comment.pk %}"> {% endcomment %}
-                <a href="/profile/{{ c.user.id }}">{{ c.user.username }}</a>: {{ c.body }}
-            </p>
-        {% endfor %}
-        <textarea id="comment{{post.id}}" class="textarea is-info" rows="4"></textarea>
-        <br>
-        <a class="commentbutton"
-           id="commentbutton{{ post.id }}"
-           href=""
-           data-userid="{{ user.id }}"
-           data-catid="{{ post.id }}">
-            <button class="button is-success has-background-info">Comment</button>
-        </a>
-    </div>
-    {% comment %} Ajax {% endcomment %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <script type="text/javascript">
-    $('.upvotebutton').click(function () {
-        var catid;
-        var userid;
-        catid = $(this).attr("data-catid");
-        userid = $(this).attr("data-userid");
-        $.ajax(
-            {
-                type: "GET",
-                url: "/post_detail/upvotepost",
-                data: {
-                    post_id: catid,
-                    user_id: userid
-                },
-                success: function (data) {
-                    $('#post' + catid).remove();
-                    $('#post' + userid).remove();
-                    $('#message').text(data);
-                    alert(data);
-                    location.reload();
-                }
-            })
-    });
-
-    $('.downvotebutton').click(function () {
-        var catid;
-        var userid;
-        catid = $(this).attr("data-catid");
-        userid = $(this).attr("data-userid");
-        $.ajax(
-            {
-                type: "GET",
-                url: "/post_detail/downvotepost",
-                data: {
-                    post_id: catid,
-                    user_id: userid
-                },
-                success: function (data) {
-                    $('#post' + catid).remove();
-                    $('#post' + userid).remove();
-                    $('#message').text(data);
-                    alert(data);
-                    location.reload();
-                }
-            })
-    });
-
-    $('.clearbutton').click(function () {
-        var catid;
-        var userid;
-        catid = $(this).attr("data-catid");
-        userid = $(this).attr("data-userid");
-        $.ajax(
-            {
-                type: "GET",
-                url: "/post_detail/clearpost",
-                data: {
-                    post_id: catid,
-                    user_id: userid
-                },
-                success: function (data) {
-                    $('#post' + catid).remove();
-                    $('#post' + userid).remove();
-                    $('#message').text(data);
-                    location.reload();
-                }
-            })
-    });
-
-    $('.commentbutton').click(function () {
-        var catid;
-        var userid;
-        var comment;
-        catid = $(this).attr("data-catid");
-        userid = $(this).attr("data-userid");
-        comment = $('#comment' + catid).val();
-        $.ajax(
-            {
-                type: "GET",
-                url: "/post_detail/commentpost",
-                data: {
-                    post_id: catid,
-                    user_id: userid,
-                    comment: comment
-                },
-                success: function (data) {
-                    $('#post' + catid).remove();
-                    $('#post' + userid).remove();
-                    $('#post' + comment).remove();
-                    $('#message').text(data);
-                    location.reload();
-                }
-            })
-    });
-
-    $('.deletebutton').click(function () {
-        var catid;
-        var userid;
-        catid = $(this).attr("data-catid");
-        userid = $(this).attr("data-userid");
-        $.ajax(
-            {
-                type: "GET",
-                url: "/post_detail/deletepost",
-                data: {
-                    post_id: catid,
-                    user_id: userid
-                },
-                success: function (data) {
-                    $('#post' + catid).remove();
-                    $('#post' + userid).remove();
-                    $('#message').text(data);
-                    window.location.href = '/';
-                }
-            })
-    });
-    </script>
-    {% comment %} <a href="{% url 'post_edit' post.pk %}">+ Edit Blog Post</a>
-    <p><a href="{% url 'post_delete' post.pk %}">+ Delete Blog Post</a></p> {% endcomment %}
+                <div style="display:inline">
+                    <a style="display:inline" href="/profile/{{ c.user.id }}">{{ c.user.username }}</a>:
+                    <p style="display:inline" id="{{ c.id }}" class="comment-body">{{ c.body }}</p>
+                    {% if c.edited %}<p style="display:inline" id="comment-editied">(Editied)</p>{% endif %}
+                </div>
+                {% comment %} Edit and delete comments {% endcomment %}
+                {% if currentuser.id == c.user.id %}
+                    <a rel="no-refresh" id="{{ c.id }}" class="updatecomment">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="13"
+                             height="13"
+                             fill="currentColor"
+                             class="bi bi-pencil-fill"
+                             viewBox="0 0 16 16">
+                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
+                        </svg>
+                    </a>
+                    <a class="updatecommentconfirm"
+                       id="{{ c.id }}"
+                       href=""
+                       data-userid="{{ user.id }}"
+                       data-catid="{{ c.id }}"
+                       style="display:none">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="13"
+                             height="13"
+                             fill="currentColor"
+                             class="bi bi-check2-square"
+                             viewBox="0 0 16 16">
+                            <path d="M3 14.5A1.5 1.5 0 0 1 1.5 13V3A1.5 1.5 0 0 1 3 1.5h8a.5.5 0 0 1 0 1H3a.5.5 0 0 0-.5.5v10a.5.5 0 0 0 .5.5h10a.5.5 0 0 0 .5-.5V8a.5.5 0 0 1 1 0v5a1.5 1.5 0 0 1-1.5 1.5H3z"/>
+                            <path d="m8.354 10.354 7-7a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z"/>
+                        </svg>
+                    </a>
+                    <a style="display:none" class="updatecommentcancel" id="{{ c.id }}">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="13"
+                             height="13"
+                             fill="currentColor"
+                             class="bi bi-x-octagon-fill"
+                             viewBox="0 0 16 16">
+                            <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
+                        </svg>
+                    </a>
+                </a>
+                <a class="deletecomment"
+                   id="deletecomment{{ c.id }}"
+                   href=""
+                   data-userid="{{ user.id }}"
+                   data-catid="{{ c.id }}"
+                   data-postid="{{ post.id }}">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="13"
+                         height="13"
+                         fill="currentColor"
+                         class="bi bi-trash-fill"
+                         viewBox="0 0 16 16">
+                        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                    </svg>
+                </a>
+            {% endif %}
+        </p>
+    {% endfor %}
+    <textarea id="comment{{post.id}}" class="textarea is-info" rows="4"></textarea>
+    <br>
+    <a class="commentbutton"
+       id="commentbutton{{ post.id }}"
+       href=""
+       data-userid="{{ user.id }}"
+       data-catid="{{ post.id }}">
+        <button class="button is-success has-background-info">Comment</button>
+    </a>
+</div>
+{% comment %} Ajax {% endcomment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script src="{% static 'js/postdetail.js' %}"></script>
 {% endblock content %}
