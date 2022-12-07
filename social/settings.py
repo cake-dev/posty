@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -142,11 +141,11 @@ TIME_ZONE = "America/Denver"
 
 # MAIL
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-DEFAULT_FROM_EMAIL = "aaron.santacruz@umconnect.umt.edu"
+DEFAULT_FROM_EMAIL = "aaron.santacruz.personal03@gmail.com"
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = (
-    "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"
+    "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"
 )
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
