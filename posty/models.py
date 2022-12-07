@@ -26,6 +26,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     post_karma = models.IntegerField(default=0, blank=True, null=True)
     comment_count = models.IntegerField(default=0, blank=True, null=True)
+    edited = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} - {self.created_at.strftime('%Y-%m-%d')} - {self.body[:30]}"

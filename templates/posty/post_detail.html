@@ -10,6 +10,7 @@
                    href="/profile/{{ post.user.id }}/">
                     <h2 style="display:inline; text-decoration:none !important;">
                         {{ post.user.username }}'s</a> Post
+                        {% if post.edited %}(Edited){% endif %}
                     </h2>
                     {% comment %} <a href="{% url 'postman:write' post.user.pk %}">Message {{ post.user.username }}</a> {% endcomment %}
                 </u>

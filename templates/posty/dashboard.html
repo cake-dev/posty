@@ -103,6 +103,7 @@
                                     <strong>{{ post.user.username }}</strong> <small>@{{ post.user.username }}</small> <small>{{ post.created_at }}</small>
                                     <br>
                                     {{ post.body|truncatechars:80 }}
+                                    {% if post.edited %}(Edited){% endif %}
                                     {% comment %} if post body length less than 1, truncatechars
                                     {% if post.body|length < 2 %}
                                         <p>{{ post.body|truncatechars:60 }}</p>

@@ -25,6 +25,7 @@
                 <a class="post" href="{% url 'posty:post_detail' post.pk %}">
                     <div class="box">
                         {{ post.body }}
+                        {% if post.edited %}(Edited){% endif %}
                         <span class="is-small has-text-grey-light">({{ post.created_at }})</span>
                         <p>K: {{ post.post_karma }}</p>
                         <p>Comments: {{ post.comment_count }}</p>

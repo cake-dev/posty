@@ -233,6 +233,7 @@ def updatePost(request):
             post.body = request.GET["body"]
             if post.body == "":
                 return HttpResponse("False")
+            post.edited = True
             post.save()
             return HttpResponse("True")
         else:
