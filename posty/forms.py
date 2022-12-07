@@ -42,6 +42,7 @@ class PostForm(forms.ModelForm):
             "user",
             "post_karma",
             "comment_count",
+            "edited",
         )
 
 
