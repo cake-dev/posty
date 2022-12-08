@@ -149,7 +149,7 @@ TIME_ZONE = "America/Denver"
 
 # MAIL
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-DEFAULT_FROM_EMAIL = "aaron.santacruz.personal03@gmail.com"
+DEFAULT_FROM_EMAIL = "developer.montana@gmail.com"
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = env("SENDGRID_API_KEY")
