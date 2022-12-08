@@ -4,3 +4,4 @@ accounts/migrations/__pycache__/*
 postman/__pycache__/*
 *.pyc
 social/.env
+db.sqlite3
