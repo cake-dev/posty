@@ -57,6 +57,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # whitenoise middleware
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "social.urls"
@@ -164,6 +166,6 @@ POSTMAN_AUTOCOMPLETER_APP = {
 }
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
-MEDIAFILES_DIRS = [BASE_DIR / "media"]
+MEDIA_ROOT = os.path.join(BASE_DIR, "static/media")
+MEDIA_URL = "/static/media/"
+MEDIAFILES_DIRS = [BASE_DIR / "static/media"]
