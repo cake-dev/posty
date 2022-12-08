@@ -64,11 +64,13 @@ def dashboard(request):
     )
 
 
+@login_required
 def profile_list(request):
     profiles = Profile.objects.all()
     return render(request, "posty/profile_list.html", {"profiles": profiles})
 
 
+@login_required
 def profile(request, pk):
     profile = Profile.objects.get(pk=pk)
     if request.method == "POST":
@@ -84,6 +86,7 @@ def profile(request, pk):
     return render(request, "posty/profile.html", {"profile": profile})
 
 
+@login_required
 def postDetailView(request, pk):
     post = Post.objects.get(pk=pk)
     return render(

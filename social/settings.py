@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-md%etxbm%xp=!bgz&1@4((sz_c=)&xxk2s@)jqia*tvz3@ql!e"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -144,9 +148,7 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 DEFAULT_FROM_EMAIL = "aaron.santacruz.personal03@gmail.com"
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_HOST_USER = "apikey"
-EMAIL_HOST_PASSWORD = (
-    "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"
-)
+EMAIL_HOST_PASSWORD = env("SENDGRID_API_KEY")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
