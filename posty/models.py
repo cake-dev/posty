@@ -21,7 +21,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, related_name="posts", on_delete=models.DO_NOTHING)
     body = models.CharField(max_length=255)
     image = models.ImageField(
-        default="onebyone.png", upload_to="images/", blank=True, null=True
+        default="onebyone.png", upload_to="/static/media/images/", blank=True, null=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
     post_karma = models.IntegerField(default=0, blank=True, null=True)
@@ -38,7 +38,7 @@ class Comment(models.Model):
     body = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     edited = models.BooleanField(default=False)
- 
+
     def __str__(self):
         return f"{self.user.username} - {self.created_at.strftime('%Y-%m-%d')} - {self.body[:30]}"
 

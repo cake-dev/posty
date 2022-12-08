@@ -20,7 +20,7 @@
                 <p id="post-body">{{ body }}</p>
             {% endwith %}
             {% comment %} set width and height if image is default image {% endcomment %}
-            {% if post.image.url == '/media/images/onebyone.png' %}
+            {% if post.image.url == 'static/media/images/onebyone.png' %}
                 <img src="{{ post.image.url }}"
                      width="0"
                      height="0"
